@@ -10,32 +10,33 @@ let score = 0;
 let questionCounter = 0;
 let availableQuestions = [];
 
-let questions = [
-    {
-        question: "Kada je poceo WWI?",
-        choice1: "1234",
-        choice2: "1914",
-        choice3: "4321",
-        choice4: "9999",
-        answer: 2
-    },
-    {
-        question: "Kada je poceo WWII?",
-        choice1: "1939",
-        choice2: "1914",
-        choice3: "1918",
-        choice4: "2022",
-        answer: 1
-    },
-    {
-        question: "Kada je poceo WWIII?",
-        choice1: "1234",
-        choice2: "1914",
-        choice3: "4321",
-        choice4: "9999",
-        answer: 4
-    }
-];
+let questions = [];
+
+fetch("https://opentdb.com/api.php?amount=10&category=9&difficulty=easy&type=multiple").then((res) => {
+    return res.json();
+})
+.then((loadedQuestions) => {
+    questions = loadedQuestions.results.map((loadedQuestion) => {
+        const formattedQuestion = {
+            question: loadedQuestion.question,
+        };
+
+        const answerChoices = [...loadedQuestion.incorrect_answers];
+        formattedQuestion.answer = Math.floor(Math.random() * 4) + 1;
+        answerChoices.splice(
+            formattedQuestion.answer - 1,
+            0,
+            loadedQuestion.correct_answer
+        );
+
+        answerChoices.forEach((choice, index) => {
+            formattedQuestion['choice' + (index + 1)] = choice;
+        });
+
+        return formattedQuestion;
+    });
+    startGame();
+})
 
 //Constants
 
@@ -105,4 +106,3 @@ incrementScore = num => {
     scoreText.innerText = score;
 }
 
-startGame();
