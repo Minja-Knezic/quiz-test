@@ -68,11 +68,19 @@ getNewQuestion = () => {
 
     const questionIndex = Math.floor(Math.random() * availableQuestions.length);
     currentQuestion = availableQuestions[questionIndex];
-    question.innerText = currentQuestion.question;
+    
+    currentQuestion.question = currentQuestion.question.replaceAll("&shy;","-")
+    currentQuestion.question = currentQuestion.question.replaceAll("&quot;","")
+    currentQuestion.question = currentQuestion.question.replaceAll("&rsquo;","'")
+    question.innerText = currentQuestion.question.replaceAll("&#039;","'");
 
     choices.forEach(choice =>{
         const number = choice.dataset['number'];
-        choice.innerText = currentQuestion['choice' + number];
+
+        currentQuestion['choice'+number] = currentQuestion['choice'+number].replaceAll("&shy;","-")
+        currentQuestion['choice'+number] = currentQuestion['choice'+number].replaceAll("&quot;","")
+        currentQuestion['choice'+number] = currentQuestion['choice'+number].replaceAll("&rsquo;","'")
+        choice.innerText = currentQuestion['choice' + number].replaceAll("&#039;","'");;
     });
 
     availableQuestions.splice(questionIndex, 1);
